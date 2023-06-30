@@ -27,6 +27,19 @@ t_block find_block(t_block *last_block, size_t size, void *first_block){
 	return block;
 }
 
+t_block extend_heap(t_block last_block, size_t size){
+	t_block block;
+	block = sbrk(0);
+	if(sbrk(META_SIZE + size) == (void*)-1)
+		return NULL;
+	block->size = size;
+	block->next_block = NULL;
+	if(last_block)
+		last_block->next_block = block;
+	block->is_free = 0;
+	return block;
+}
+
 void split_block(t_block block, size_t size){
 	        t_block new_block;
 		new_block->data[1] = block->data[1] + size;
